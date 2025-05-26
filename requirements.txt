@@ -29,3 +29,6 @@ pytest-asyncio>=0.23.2
 
 rapidfuzz
 aiolimiter
+
+aioresponses==0.7.8
+
