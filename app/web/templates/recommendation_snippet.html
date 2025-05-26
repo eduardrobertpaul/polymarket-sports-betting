@@ -1,0 +1,23 @@
+<div class="bg-white rounded shadow p-4">
+    <h2 class="text-xl font-semibold mb-2">Recommendation</h2>
+  
+    {% if recs %}
+    <table class="min-w-full text-sm mb-4">
+      <thead><tr><th class="text-left">Outcome</th><th>True P</th><th>Market P</th><th>Edge</th><th>Stake</th></tr></thead>
+      <tbody>
+        {% for outcome, stake in recs.items() %}
+        <tr>
+          <td>{{ outcome }}</td>
+          <td>{{ '%.2f' % true_probs[outcome] }}</td>
+          <td>{{ '%.2f' % market_probs[outcome] }}</td>
+          <td>{{ '%.2f' % edges[outcome] }}</td>
+          <td>{{ stake }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No edge ≥ 2 % at the moment.</p>
+    {% endif %}
+  </div>
+  

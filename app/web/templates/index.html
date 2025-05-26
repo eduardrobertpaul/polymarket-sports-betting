@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">Select a Fixture</h1>
+<ul class="space-y-2">
+  {% for fid, label in fixtures.items() %}
+  <li class="p-3 bg-white rounded shadow flex justify-between">
+    <span>{{ label }} (ID {{ fid }})</span>
+    <a href="{{ url_for('fixture_page', fixture_id=fid) }}"
+       class="text-indigo-600 hover:underline">Open</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="text-2xl font-bold mb-4">{{ fixture_label }}</h1>
+
+<button 
+  hx-get="{{ url_for('fixture_recommendation', fixture_id=fixture_id) }}"
+  hx-target="#reco"
+  hx-swap="outerHTML"
+  class="px-4 py-2 bg-indigo-600 text-white rounded shadow">
+  Recommend Now
+</button>
+
+<div id="reco" class="mt-6">
+  <!-- Recommendation snippet loads here -->
+</div>
+{% endblock %}
