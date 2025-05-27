@@ -4,7 +4,8 @@ import abc
 import time
 from functools import wraps
 from typing import Any, Awaitable, Callable, Dict, List, Tuple, TypeVar
-
+from aiohttp import ClientError  # add to imports
+from app.logging_config import logger  # new import
 import aiohttp
 from aiolimiter import AsyncLimiter
 
@@ -70,13 +71,19 @@ class OddsProvider(abc.ABC):
 
     @_ttl_cache
     async def _get_json(self, url: str, params: Dict[str, Any]) -> _JSON | None:
-        """Rate-limited GET returning JSON (or None on non-200)."""
+        """Rate-limited GET returning JSON (or None on error)."""
         async with _rate_limiter:
             session = await self._get_session()
-            async with session.get(url, params=params) as resp:
-                if resp.status == 200:
-                    return await resp.json()
-                return None
+            try:
+                async with session.get(url, params=params) as resp:
+                    if resp.status == 200:
+                        return await resp.json()
+                    logger.warning(
+                        f"[provider:{self.name}] HTTP {resp.status} for {url}"
+                    )
+            except ClientError as e:
+                logger.error(f"[provider:{self.name}] Network error: {e}")
+        return None
 
     @abc.abstractmethod
     async def fetch_fixture_odds(

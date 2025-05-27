@@ -1,26 +1,19 @@
-"""
-Typer-powered CLI entry point.
-
-Usage examples:
-    python -m app.cli fetch --fixture 123
-    python -m app.cli recommend --fixture 123 --edge-threshold 0.03
-"""
-
-from __future__ import annotations
+from __future__ import annotations   # ← first line, nothing before it
 
 import json
 import sys
-from datetime import datetime
 from typing import Any, Dict, List
-import app.scheduler
+
+import asyncio
 import typer
 from rich import print
 
-from app.polymarket.aggregation import snapshots_to_true_probs
+from app.logging_config import configure_logging, logger
+from app.polymarket.aggregation import snapshots_to_true_probs, ProviderSnapshot, OutcomeOdds
 from app.polymarket.staking import recommend, compute_edge
 from app.providers import get_active_providers
 from app.polymarket.client import fetch_market_probs
-from app.polymarket.aggregation import ProviderSnapshot, OutcomeOdds
+
 
 app = typer.Typer(add_completion=False, no_args_is_help=True)
 
@@ -64,7 +57,12 @@ def fetch(
             "market_probs": market_probs_rows,
         }
 
-    data = asyncio.run(_run())
+    try:
+        data = asyncio.run(_run())
+    except Exception as exc:  # broad, but CLI shouldn’t crash
+        logger.exception(f"CLI command failed: {exc}")
+        typer.Exit(code=1)
+
     dump = json.dumps(data, indent=2) if pretty else json.dumps(data)
     print(dump)
 
@@ -96,7 +94,11 @@ def recommend_cmd(
             "recommendations": recs,
         }
 
-    result = asyncio.run(_run())
+    try:
+        result = asyncio.run(_run())
+    except Exception as exc:  # broad, but CLI shouldn’t crash
+        logger.exception(f"CLI command failed: {exc}")
+        typer.Exit(code=1)
     print(json.dumps(result, indent=2))
 
 

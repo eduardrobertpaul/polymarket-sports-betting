@@ -1,4 +1,5 @@
 from __future__ import annotations
+from app.logging_config import logger
 
 import asyncio
 from typing import Any, Dict
