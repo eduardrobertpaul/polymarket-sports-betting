@@ -34,3 +34,6 @@ aioresponses==0.7.8
 
 pytest-cov
 
+
+aiosqlite==0.21.0
+

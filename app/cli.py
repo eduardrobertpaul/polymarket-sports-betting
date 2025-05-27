@@ -14,6 +14,7 @@ from app.polymarket.staking import recommend, compute_edge
 from app.providers import get_active_providers
 from app.polymarket.client import fetch_market_probs
 
+configure_logging()
 
 app = typer.Typer(add_completion=False, no_args_is_help=True)
 
@@ -102,10 +103,19 @@ def recommend_cmd(
     print(json.dumps(result, indent=2))
 
 
-@app.command(help="Backtest placeholder (to be implemented).")
-def backtest():
-    print("[yellow]Backtest engine is TODO – coming in Section 14.[/yellow]")
-    sys.exit(0)
+@app.command(help="Run back-test, update metrics, and print summary.")
+def backtest(
+    write: bool = typer.Option(False, help="Write results into provider_metrics"),
+):
+    import asyncio
+    from app.backtest import summary, update_provider_metrics
+
+    scores, table = asyncio.run(summary())
+    print(table)
+    if write:
+        asyncio.run(update_provider_metrics())
+        print("[green]Metrics table updated.[/green]")
+
 
 @app.command(help="Run background scheduler (Ctrl+C to stop).")
 def scheduler():
