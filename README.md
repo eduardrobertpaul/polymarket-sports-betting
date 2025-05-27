@@ -1,4 +1,6 @@
 # Polymarket Sports Betting
+![CI](https://github.com/eduardrobertpaul/polymarket-sports-betting/actions/workflows/ci.yml/badge.svg)
+
 
 A Python application for analyzing sports betting odds and opportunities on Polymarket.
 
