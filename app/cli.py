@@ -12,7 +12,7 @@ import json
 import sys
 from datetime import datetime
 from typing import Any, Dict, List
-
+import app.scheduler
 import typer
 from rich import print
 
@@ -104,6 +104,12 @@ def recommend_cmd(
 def backtest():
     print("[yellow]Backtest engine is TODO – coming in Section 14.[/yellow]")
     sys.exit(0)
+
+@app.command(help="Run background scheduler (Ctrl+C to stop).")
+def scheduler():
+    from app.scheduler import run as run_scheduler
+
+    run_scheduler()
 
 
 if __name__ == "__main__":
