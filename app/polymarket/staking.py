@@ -49,9 +49,10 @@ def fractional_kelly(
     """
     if not 0.0 < p_true < 1.0:
         raise ValueError("p_true must be in (0,1)")
-    if not 0.0 < price < 1.0:
-        raise ValueError("price must be in (0,1)")
+    if price <= 0.0:
+        raise ValueError("price must be > 0")
     if price >= 1.0:
+        # Market has effectively settled; no profitable stake
         return 0.0
 
     b = 1 / price - 1

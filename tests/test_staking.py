@@ -34,6 +34,12 @@ def test_fractional_kelly(p_true, price, k_frac, stake) -> None:
     assert pytest.approx(out, rel=1e-6) == stake
 
 
+def test_fractional_kelly_handles_settled_market() -> None:
+    """If price is >= 1 the market is effectively settled and stake should be 0."""
+    out = fractional_kelly(p_true=0.6, price=1.0, kelly_fraction=1.0)
+    assert out == 0.0
+
+
 def test_recommend_filters_and_scales() -> None:
     true_p = {"Yes": 0.55, "No": 0.45}
     market_p = {"Yes": 0.48, "No": 0.52}
